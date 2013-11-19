@@ -1,0 +1,81 @@
+\hypertarget{settings-use-example_8py_source}{\section{/home/barrachi/datos/aplicaciones/powermeter/settings-\/use-\/example.py}
+}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{#!/usr/bin/env python2}
+00002 \textcolor{comment}{# -*- coding: utf-8 -*-}
+00003 
+00004 \textcolor{comment}{#======================================================================}
+00005 \textcolor{comment}{# PowerMeter daemon settings use example}
+00006 \textcolor{comment}{#======================================================================}
+00007 
+00008 \textcolor{comment}{## Read settings}
+00009 \textcolor{keyword}{import} settings
+00010 
+00011 \textcolor{keyword}{def }header(txt):
+00012     \textcolor{keywordflow}{print} \textcolor{stringliteral}{"------------------------------------------------------------"}
+00013     \textcolor{keywordflow}{print} \textcolor{stringliteral}{"\{0:^60\}"}.format(txt)
+00014     \textcolor{keywordflow}{print} \textcolor{stringliteral}{"------------------------------------------------------------"}
+00015     
+00016 
+00017 \textcolor{comment}{## Shows the information given by the settings file}
+00018 \textcolor{keyword}{def }main():
+00019 
+00020     \textcolor{comment}{# Show all the computers}
+00021     header(\textcolor{stringliteral}{"Computers"})
+00022     \textcolor{keywordflow}{for} computer \textcolor{keywordflow}{in} settings.computers.values():
+00023         \textcolor{keywordflow}{print} computer
+00024     \textcolor{keywordflow}{print}
+00025     \textcolor{keywordflow}{print}
+00026 
+00027     \textcolor{comment}{# Show all the devices}
+00028     header(\textcolor{stringliteral}{"Devices"})
+00029     \textcolor{keywordflow}{for} device \textcolor{keywordflow}{in} settings.devices.values():
+00030         \textcolor{keywordflow}{print} device
+00031     \textcolor{keywordflow}{print}
+00032     \textcolor{keywordflow}{print}
+00033     
+00034     \textcolor{comment}{# Access the devices of a given computer}
+00035     header(\textcolor{stringliteral}{"Devices in computer 'lorca'"})
+00036     \textcolor{keywordflow}{for} device \textcolor{keywordflow}{in} settings.computers[\textcolor{stringliteral}{'lorca'}].devices.values():
+00037         \textcolor{keywordflow}{print} device
+00038     \textcolor{keywordflow}{print}
+00039     \textcolor{keywordflow}{print}
+00040 
+00041     header(\textcolor{stringliteral}{"Devices in computer 'matserv'"})
+00042     \textcolor{keywordflow}{for} device \textcolor{keywordflow}{in} settings.computers[\textcolor{stringliteral}{'matserv'}].devices.values():
+00043         \textcolor{keywordflow}{print} device
+00044     \textcolor{keywordflow}{print}
+00045     \textcolor{keywordflow}{print}
+00046 
+00047     \textcolor{comment}{# Access to which computer a given device is attached to}
+00048     header(\textcolor{stringliteral}{"Computer to which device 'DCMeter' is attached"})
+00049     \textcolor{keywordflow}{print} settings.devices[\textcolor{stringliteral}{"DCMeter"}].computer
+00050     \textcolor{keywordflow}{print}
+00051     \textcolor{keywordflow}{print}
+00052 
+00053     \textcolor{comment}{# Access the lines of a given device}
+00054     header(\textcolor{stringliteral}{"Lines in device 'DCMeter'"})
+00055     \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} settings.devices[\textcolor{stringliteral}{"DCMeter"}].lines.values():
+00056         \textcolor{keywordflow}{print} line
+00057     \textcolor{keywordflow}{print}
+00058     \textcolor{keywordflow}{print}
+00059 
+00060     header(\textcolor{stringliteral}{"Lines in device 'PDU'"})
+00061     \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} settings.devices[\textcolor{stringliteral}{"PDU"}].lines.values():
+00062         \textcolor{keywordflow}{print} line
+00063     \textcolor{keywordflow}{print}
+00064     \textcolor{keywordflow}{print}
+00065 
+00066     \textcolor{comment}{# Access individual properties of a given line of a given device}
+00067     header(\textcolor{stringliteral}{"Properties of line 'DC 12V' of device 'DCMeter'"})
+00068     line=settings.devices[\textcolor{stringliteral}{"DCMeter"}].lines[\textcolor{stringliteral}{"DC 12V"}]
+00069     \textcolor{keywordflow}{print} \textcolor{stringliteral}{"Line name: \{0\}"}.format(line.name)
+00070     \textcolor{keywordflow}{print} \textcolor{stringliteral}{"Line voltage: \{0\}"}.format(line.voltage)
+00071     \textcolor{keywordflow}{print} \textcolor{stringliteral}{"Line description: '\{0\}'"}.format(line.description)
+00072     \textcolor{keywordflow}{print}
+00073 
+00074 
+00075 \textcolor{keywordflow}{if} \_\_name\_\_==\textcolor{stringliteral}{"\_\_main\_\_"}:
+00076    main()
+\end{DoxyCode}

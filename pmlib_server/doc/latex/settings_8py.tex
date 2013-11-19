@@ -1,0 +1,22 @@
+\hypertarget{settings_8py}{\section{/home/barrachi/datos/aplicaciones/powermeter/settings.py \-File \-Reference}
+\label{settings_8py}\index{/home/barrachi/datos/aplicaciones/powermeter/settings.\-py@{/home/barrachi/datos/aplicaciones/powermeter/settings.\-py}}
+}
+\subsection*{\-Variables}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries \-P\-O\-R\-T} = 6526
+\item 
+string {\bfseries \-L\-O\-G\-F\-I\-L\-E\-N\-A\-M\-E} = \char`\"{}/var/log/powermeter.\-log\char`\"{}
+\item 
+tuple {\bfseries comp1} = \-Computer(name=\char`\"{}lorca\char`\"{}, ip=\char`\"{}150.\-128.\-83.\-25\char`\"{})
+\item 
+tuple {\bfseries comp2} = \-Computer(name=\char`\"{}matserv\char`\"{}, ip=\char`\"{}150.\-128.\-83.\-35\char`\"{})
+\item 
+tuple {\bfseries dev1} = \-D\-C\-Device(name=\char`\"{}\-D\-C\-Meter\char`\"{}, computer=comp1, url=\char`\"{}file\-://dev/usb0\char`\"{}, max\-\_\-frequency=25)
+\item 
+tuple {\bfseries dev2} = \-D\-C2\-Device(name=\char`\"{}\-D\-C\-Meter2\char`\"{}, computer=comp1, url=\char`\"{}file\-://dev/usb1\char`\"{}, max\-\_\-frequency=1000)
+\item 
+tuple {\bfseries dev3} = \-Watts\-Up\-Device(name=\char`\"{}\-Watts\-Up\char`\"{}, computer=comp2, url=\char`\"{}file\-://dev/usb3\char`\"{}, max\-\_\-frequency=50)
+\item 
+tuple {\bfseries dev4} = \-P\-D\-U\-Device(name=\char`\"{}\-P\-D\-U\char`\"{}, url=\char`\"{}ssh\-://user\-:pass@matserv.\-uji.\-es\char`\"{}, max\-\_\-frequency=1000)
+\end{DoxyCompactItemize}

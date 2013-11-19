@@ -1,0 +1,303 @@
+\hypertarget{settings__classes_8py_source}{\section{/home/barrachi/datos/aplicaciones/powermeter/settings\-\_\-classes.py}
+}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{#!/usr/bin/env python2}
+00002 \textcolor{comment}{# -*- coding: utf-8 -*-}
+00003 
+00004 \textcolor{comment}{#======================================================================}
+00005 \textcolor{comment}{# PowerMeter daemon setting classes}
+00006 \textcolor{comment}{#}
+00007 \textcolor{comment}{# This module defines the classes and dictionaries used by settings.py}
+00008 \textcolor{comment}{#======================================================================}
+00009 
+00010 
+00011 \textcolor{comment}{## Dictionary of devices}
+00012 devices=\{\}
+00013 
+00014 \textcolor{comment}{## Dictionary of computers}
+00015 computers=\{\}
+00016 
+00017 
+00018 \textcolor{comment}{## A computer description}
+00019 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00020}{}\hyperlink{classsettings__classes_1_1_computer}{00020} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_computer}{Computer}(object):
+00021 
+00022     \textcolor{comment}{## Creates a computer description and adds it to the computers}
+00023     \textcolor{comment}{## dictionary}
+00024     \textcolor{comment}{#}
+00025     \textcolor{comment}{# @param [in] name  The name of the computer}
+00026     \textcolor{comment}{# @param [in] ip    The IP address of the computer}
+00027     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00028}{}\hyperlink{classsettings__classes_1_1_computer_ab74e6bf80237ddc4109968cedc58c151}{00028}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_computer_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, ip):
+00029         self.\hyperlink{classsettings__classes_1_1_computer_ab74e6bf80237ddc4109968cedc58c151}{name}=name
+00030         self.\hyperlink{classsettings__classes_1_1_computer_afd65cf072a93c93ad52b9f25b341e10b}{ip}=ip
+00031         self.\hyperlink{classsettings__classes_1_1_computer_aa4b88f24716e66e8d41400b00e8ae8ae}{devices}=\{\}
+00032         \textcolor{comment}{# Register the computer}
+00033         computers[name]=self
+00034         
+00035     \textcolor{comment}{## Returns a string representation for this computer}
+\hypertarget{settings__classes_8py_source_l00036}{}\hyperlink{classsettings__classes_1_1_computer_ad8b9328939df072e4740cd9a63189744}{00036}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_computer_ad8b9328939df072e4740cd9a63189744}{__repr__}(self):
+00037         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"Computer \{0\} (\{1\}): \{2\} device(s)"}.format(self.\hyperlink{classsettings__classes_1_1_computer_ab74e6bf80237ddc4109968cedc58c151}{name}, self.\hyperlink{classsettings__classes_1_1_computer_afd65cf072a93c93ad52b9f25b341e10b}{ip}, 
+      len(self.\hyperlink{classsettings__classes_1_1_computer_aa4b88f24716e66e8d41400b00e8ae8ae}{devices}))
+00038 
+00039     \textcolor{comment}{## Adds a device description to the computer}
+00040     \textcolor{comment}{#}
+00041     \textcolor{comment}{# @param [in] device  A device description object}
+00042     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00043}{}\hyperlink{classsettings__classes_1_1_computer_a66aa7c8063db6217a0a0061f8b7ba206}{00043}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_computer_a66aa7c8063db6217a0a0061f8b7ba206}{add}(self, device):
+00044         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} isinstance(device, Device):
+00045             msg=\textcolor{stringliteral}{"the given device parameter is not a Device object"}
+00046             \textcolor{keywordflow}{raise} SyntaxError, msg
+00047         self.\hyperlink{classsettings__classes_1_1_computer_aa4b88f24716e66e8d41400b00e8ae8ae}{devices}[device.name]=device
+00048 
+00049 
+00050 
+00051 \textcolor{comment}{## A line description}
+00052 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00053}{}\hyperlink{classsettings__classes_1_1_line}{00053} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_line}{Line}(object):
+00054 
+00055     \textcolor{comment}{## Creates a line description}
+00056     \textcolor{comment}{#}
+00057     \textcolor{comment}{# @param [in] name        The line name (used for identification)}
+00058     \textcolor{comment}{# @param [in] voltage     The line voltage}
+00059     \textcolor{comment}{# @param [in] description A text description of the line}
+00060     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00061}{}\hyperlink{classsettings__classes_1_1_line_aa1a8261d8fb901476651f1666f993d4b}{00061}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_line_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, voltage, description):
+00062         self.\hyperlink{classsettings__classes_1_1_line_ab74e6bf80237ddc4109968cedc58c151}{name}=name
+00063         self.\hyperlink{classsettings__classes_1_1_line_aa1a8261d8fb901476651f1666f993d4b}{voltage}=voltage
+00064         self.\hyperlink{classsettings__classes_1_1_line_a2661f439a4a94ffdcd5e47ae1da0bb1d}{description}=description
+00065 
+00066     \textcolor{comment}{## Returns a string representation for this line}
+\hypertarget{settings__classes_8py_source_l00067}{}\hyperlink{classsettings__classes_1_1_line_ad8b9328939df072e4740cd9a63189744}{00067}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_line_ad8b9328939df072e4740cd9a63189744}{__repr__}(self):
+00068         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"Line \{0\} (voltage: \{1\}, description: '\{2\}')"}.format(self.\hyperlink{classsettings__classes_1_1_line_ab74e6bf80237ddc4109968cedc58c151}{name}, 
+      self.\hyperlink{classsettings__classes_1_1_line_aa1a8261d8fb901476651f1666f993d4b}{voltage}, self.\hyperlink{classsettings__classes_1_1_line_a2661f439a4a94ffdcd5e47ae1da0bb1d}{description})
+00069 
+00070 
+00071 
+00072 \textcolor{comment}{## A PDU line description}
+00073 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00074}{}\hyperlink{classsettings__classes_1_1_p_d_u_line}{00074} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_p_d_u_line}{PDULine}(object):
+00075 
+00076     \textcolor{comment}{## Creates a PDU line description}
+00077     \textcolor{comment}{#}
+00078     \textcolor{comment}{# @param [in] name        The line name (used for identification)}
+00079     \textcolor{comment}{# @param [in] computer    The computer this PDU line is attached to}
+00080     \textcolor{comment}{# @param [in] voltage     The line voltage}
+00081     \textcolor{comment}{# @param [in] description An optional text description of the line}
+00082     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00083}{}\hyperlink{classsettings__classes_1_1_p_d_u_line_aa1a8261d8fb901476651f1666f993d4b}{00083}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_p_d_u_line_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, computer, voltage, description=""):
+00084         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} isinstance(computer, Computer):
+00085             msg=\textcolor{stringliteral}{"the given computer parameter is not a Computer object"}
+00086             \textcolor{keywordflow}{raise} SyntaxError, msg
+00087         self.\hyperlink{classsettings__classes_1_1_p_d_u_line_ab74e6bf80237ddc4109968cedc58c151}{name}=name
+00088         self.\hyperlink{classsettings__classes_1_1_p_d_u_line_a98f8cb986fbbcd435b452dc91dc6e8c1}{computer}=computer
+00089         self.\hyperlink{classsettings__classes_1_1_p_d_u_line_aa1a8261d8fb901476651f1666f993d4b}{voltage}=voltage
+00090         self.\hyperlink{classsettings__classes_1_1_p_d_u_line_a2661f439a4a94ffdcd5e47ae1da0bb1d}{description}=description
+00091 
+00092     \textcolor{comment}{## Returns a string representation for this line}
+\hypertarget{settings__classes_8py_source_l00093}{}\hyperlink{classsettings__classes_1_1_p_d_u_line_ad8b9328939df072e4740cd9a63189744}{00093}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_p_d_u_line_ad8b9328939df072e4740cd9a63189744}{__repr__}(self):
+00094         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"Line \{0\} (computer: '\{1\}', voltage: \{2\}, description: '\{3\}')"}.
+      format(self.\hyperlink{classsettings__classes_1_1_p_d_u_line_ab74e6bf80237ddc4109968cedc58c151}{name}, self.\hyperlink{classsettings__classes_1_1_p_d_u_line_a98f8cb986fbbcd435b452dc91dc6e8c1}{computer}.name, self.\hyperlink{classsettings__classes_1_1_p_d_u_line_aa1a8261d8fb901476651f1666f993d4b}{voltage}, self.\hyperlink{classsettings__classes_1_1_p_d_u_line_a2661f439a4a94ffdcd5e47ae1da0bb1d}{description})
+00095 
+00096 
+00097 
+00098 \textcolor{comment}{## A device description}
+00099 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00100}{}\hyperlink{classsettings__classes_1_1_device}{00100} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_device}{Device}(object):
+00101     
+00102     \textcolor{comment}{## Creates a device description and adds it to the devices}
+00103     \textcolor{comment}{## dictionary}
+00104     \textcolor{comment}{#}
+00105     \textcolor{comment}{#  Before adding the given device description to the devices}
+00106     \textcolor{comment}{#  dictionary, it checks that the name of the new device has not}
+00107     \textcolor{comment}{#  been used by a previously added device.}
+00108     \textcolor{comment}{#}
+00109     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique)}
+00110     \textcolor{comment}{# @param [in] url            The url of this device}
+00111     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00112     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00113}{}\hyperlink{classsettings__classes_1_1_device_afcd5a3e84f2adb7f83fa6c99911f31e4}{00113}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, url, max\_frequency):
+00114         self.\hyperlink{classsettings__classes_1_1_device_ab74e6bf80237ddc4109968cedc58c151}{name}=name
+00115         self.\hyperlink{classsettings__classes_1_1_device_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}=url
+00116         self.\hyperlink{classsettings__classes_1_1_device_a22b4066c76c38dbb99a2ef57fc220fb8}{max_frequency}=max\_frequency
+00117         self.\hyperlink{classsettings__classes_1_1_device_a22ea78f101680108434cb132f12afa0a}{lines}=\{\}
+00118         \textcolor{keywordflow}{if} devices.has\_key(name):
+00119             msg=\textcolor{stringliteral}{"there are at least two devices with the same name (\{0\})."}.
+      format(self.\hyperlink{classsettings__classes_1_1_device_ab74e6bf80237ddc4109968cedc58c151}{name})
+00120             \textcolor{keywordflow}{raise} SyntaxError, msg
+00121         \textcolor{comment}{# Register the device}
+00122         devices[name]=self
+00123 
+00124     \textcolor{comment}{## Returns a string representation for this device}
+\hypertarget{settings__classes_8py_source_l00125}{}\hyperlink{classsettings__classes_1_1_device_ad8b9328939df072e4740cd9a63189744}{00125}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_device_ad8b9328939df072e4740cd9a63189744}{__repr__}(self):
+00126         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"Device \{0\} (url: '\{1\}', max frequency: \{2\}, lines: \{3\})"}.format
+      (self.\hyperlink{classsettings__classes_1_1_device_ab74e6bf80237ddc4109968cedc58c151}{name}, self.\hyperlink{classsettings__classes_1_1_device_afcd5a3e84f2adb7f83fa6c99911f31e4}{url}, self.\hyperlink{classsettings__classes_1_1_device_a22b4066c76c38dbb99a2ef57fc220fb8}{max_frequency}, len(self.\hyperlink{classsettings__classes_1_1_device_a22ea78f101680108434cb132f12afa0a}{lines}))
+00127 
+00128     \textcolor{comment}{## Adds a line description to the device}
+00129     \textcolor{comment}{#}
+00130     \textcolor{comment}{#  Before adding the given line description to the device, it}
+00131     \textcolor{comment}{#  checks that the name of the new line has not been used by a}
+00132     \textcolor{comment}{#  previously added line.}
+00133     \textcolor{comment}{#}
+00134     \textcolor{comment}{# @param [in] name        The line name (used for identification)}
+00135     \textcolor{comment}{# @param [in] voltage     The line voltage}
+00136     \textcolor{comment}{# @param [in] description A text description of the line}
+00137     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00138}{}\hyperlink{classsettings__classes_1_1_device_a9b24e7f6a176430603b1aec4ead55473}{00138}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_device_a9b24e7f6a176430603b1aec4ead55473}{add_line}(self, name, voltage, description):
+00139         \textcolor{keywordflow}{if} self.lines.has\_key(name):
+00140             msg=\textcolor{stringliteral}{"there are at least two lines with the same name, '\{0\}', in
+       device '\{1\}'."}.format(name, self.\hyperlink{classsettings__classes_1_1_device_ab74e6bf80237ddc4109968cedc58c151}{name})
+00141             \textcolor{keywordflow}{raise} SyntaxError, msg
+00142         self.\hyperlink{classsettings__classes_1_1_device_a22ea78f101680108434cb132f12afa0a}{lines}[name]=\hyperlink{classsettings__classes_1_1_line}{Line}(name, voltage, description)
+00143 
+00144 
+00145 
+00146 \textcolor{comment}{## A device attached to a computer description}
+00147 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00148}{}\hyperlink{classsettings__classes_1_1_attached_device}{00148} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_attached_device}{AttachedDevice}(\hyperlink{classsettings__classes_1_1_device}{Device}):
+00149     
+00150     \textcolor{comment}{## Creates device attached to a computer description and adds it}
+00151     \textcolor{comment}{## to the devices dictionary}
+00152     \textcolor{comment}{#}
+00153     \textcolor{comment}{#  Before adding the given device description to the devices}
+00154     \textcolor{comment}{#  dictionary, it checks that the name of the new device has not}
+00155     \textcolor{comment}{#  been used by a previously added device.}
+00156     \textcolor{comment}{#}
+00157     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique) }
+00158     \textcolor{comment}{# @param [in] computer       The computer the device is attached to}
+00159     \textcolor{comment}{# @param [in] url            The url of this device}
+00160     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00161     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00162}{}\hyperlink{classsettings__classes_1_1_attached_device_a98f8cb986fbbcd435b452dc91dc6e8c1}{00162}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_attached_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, computer, url, max\_frequency):
+00163         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} isinstance(computer, Computer):
+00164             msg=\textcolor{stringliteral}{"the given computer parameter is not a Computer object"}
+00165             \textcolor{keywordflow}{raise} SyntaxError, msg
+00166         self.\hyperlink{classsettings__classes_1_1_attached_device_a98f8cb986fbbcd435b452dc91dc6e8c1}{computer}=computer
+00167         super(AttachedDevice, self).\hyperlink{classsettings__classes_1_1_attached_device_ac775ee34451fdfa742b318538164070e}{__init__}(name, url, max\_frequency)
+00168         \textcolor{comment}{# Register the device in the computer it is attached to}
+00169         self.computer.add(self)
+00170 
+00171 
+00172 \textcolor{comment}{## A DCMeter device description}
+00173 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00174}{}\hyperlink{classsettings__classes_1_1_d_c_device}{00174} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_d_c_device}{DCDevice}(\hyperlink{classsettings__classes_1_1_attached_device}{AttachedDevice}):
+00175     
+00176     \textcolor{comment}{## Creates a DC2Meter device description and adds it to the}
+00177     \textcolor{comment}{## devices dictionary}
+00178     \textcolor{comment}{#}
+00179     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique)}
+00180     \textcolor{comment}{# @param [in] computer       The computer the device is attached to}
+00181     \textcolor{comment}{# @param [in] url            The url of this device}
+00182     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00183     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00184}{}\hyperlink{classsettings__classes_1_1_d_c_device_ac775ee34451fdfa742b318538164070e}{00184}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_d_c_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, computer, url, max\_frequency):
+00185         super(DCDevice, self).\hyperlink{classsettings__classes_1_1_d_c_device_ac775ee34451fdfa742b318538164070e}{__init__}(name, computer, url, max\_frequency)
+00186 
+00187 
+00188 
+00189 \textcolor{comment}{## A DC2Meter device description}
+00190 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00191}{}\hyperlink{classsettings__classes_1_1_d_c2_device}{00191} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_d_c2_device}{DC2Device}(\hyperlink{classsettings__classes_1_1_attached_device}{AttachedDevice}):
+00192     
+00193     \textcolor{comment}{## Creates a DC2Meter device description and adds it to the}
+00194     \textcolor{comment}{## devices dictionary}
+00195     \textcolor{comment}{#}
+00196     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique)}
+00197     \textcolor{comment}{# @param [in] computer       The computer the device is attached to}
+00198     \textcolor{comment}{# @param [in] url            The url of this device}
+00199     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00200     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00201}{}\hyperlink{classsettings__classes_1_1_d_c2_device_ac775ee34451fdfa742b318538164070e}{00201}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_d_c2_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, computer, url, max\_frequency):
+00202         super(DC2Device, self).\hyperlink{classsettings__classes_1_1_d_c2_device_ac775ee34451fdfa742b318538164070e}{__init__}(name, computer, url, max\_frequency)
+00203 
+00204 
+00205 
+00206 \textcolor{comment}{## A National Instruments device description}
+00207 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00208}{}\hyperlink{classsettings__classes_1_1_n_i_device}{00208} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_n_i_device}{NIDevice}(\hyperlink{classsettings__classes_1_1_attached_device}{AttachedDevice}):
+00209     
+00210     \textcolor{comment}{## Creates a National Instruments device description and adds it}
+00211     \textcolor{comment}{## to the devices dictionary}
+00212     \textcolor{comment}{#}
+00213     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique)}
+00214     \textcolor{comment}{# @param [in] computer       The computer the device is attached to}
+00215     \textcolor{comment}{# @param [in] url            The url of this device}
+00216     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00217     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00218}{}\hyperlink{classsettings__classes_1_1_n_i_device_ac775ee34451fdfa742b318538164070e}{00218}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_n_i_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, computer, url, max\_frequency):
+00219         super(NIDevice, self).\hyperlink{classsettings__classes_1_1_n_i_device_ac775ee34451fdfa742b318538164070e}{__init__}(name, computer, url, max\_frequency)
+00220 
+00221 
+00222 
+00223 \textcolor{comment}{## A WattsUp device description}
+00224 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00225}{}\hyperlink{classsettings__classes_1_1_watts_up_device}{00225} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_watts_up_device}{WattsUpDevice}(\hyperlink{classsettings__classes_1_1_attached_device}{AttachedDevice}):
+00226     
+00227     \textcolor{comment}{## Creates a WattsUp device description and adds it to the devices}
+00228     \textcolor{comment}{## dictionary}
+00229     \textcolor{comment}{#}
+00230     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique)}
+00231     \textcolor{comment}{# @param [in] computer       The computer the device is attached to}
+00232     \textcolor{comment}{# @param [in] url            The url of this device}
+00233     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00234     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00235}{}\hyperlink{classsettings__classes_1_1_watts_up_device_ac775ee34451fdfa742b318538164070e}{00235}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_watts_up_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, computer, url, max\_frequency):
+00236         super(WattsUpDevice, self).\hyperlink{classsettings__classes_1_1_watts_up_device_ac775ee34451fdfa742b318538164070e}{__init__}(name, computer, url, max\_frequency)
+00237 
+00238     \textcolor{comment}{## Fake adding of line description to the device}
+00239     \textcolor{comment}{#}
+00240     \textcolor{comment}{#  The WattsUp Device does not have lines. This method avoids the}
+00241     \textcolor{comment}{#  base class method silently been called.}
+00242     \textcolor{comment}{#}
+00243     \textcolor{comment}{# @param [in] name        The line name (used for identification)}
+00244     \textcolor{comment}{# @param [in] voltage     The line voltage}
+00245     \textcolor{comment}{# @param [in] description A text description of the line}
+00246     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00247}{}\hyperlink{classsettings__classes_1_1_watts_up_device_a9b24e7f6a176430603b1aec4ead55473}{00247}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_watts_up_device_a9b24e7f6a176430603b1aec4ead55473}{add_line}(self, name, voltage, description):
+00248         msg=\textcolor{stringliteral}{"a WattsUp Device can not have lines"}
+00249         \textcolor{keywordflow}{raise} SyntaxError, msg
+00250 
+00251 
+00252 
+00253 \textcolor{comment}{## A PDU device description}
+00254 \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00255}{}\hyperlink{classsettings__classes_1_1_p_d_u_device}{00255} \textcolor{keyword}{class }\hyperlink{classsettings__classes_1_1_p_d_u_device}{PDUDevice}(\hyperlink{classsettings__classes_1_1_device}{Device}):
+00256     
+00257     \textcolor{comment}{## Creates a PDU device description and adds it to the devices}
+00258     \textcolor{comment}{## dictionary}
+00259     \textcolor{comment}{#}
+00260     \textcolor{comment}{# @param [in] name           The device name (used for identification, must
+       be unique)}
+00261     \textcolor{comment}{# @param [in] url            The url of this device}
+00262     \textcolor{comment}{# @param [in] max\_frequency  The maximum sample frequency of the device}
+00263     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00264}{}\hyperlink{classsettings__classes_1_1_p_d_u_device_ac775ee34451fdfa742b318538164070e}{00264}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_p_d_u_device_ac775ee34451fdfa742b318538164070e}{__init__}(self, name, url, max\_frequency):
+00265         super(PDUDevice, self).\hyperlink{classsettings__classes_1_1_p_d_u_device_ac775ee34451fdfa742b318538164070e}{__init__}(name, url, max\_frequency)
+00266 
+00267 
+00268     \textcolor{comment}{## Adds a pdu line description to the device}
+00269     \textcolor{comment}{#}
+00270     \textcolor{comment}{#  Before adding the given line description to the device, it}
+00271     \textcolor{comment}{#  checks that the name of the new line has not been used by a}
+00272     \textcolor{comment}{#  previously added line.}
+00273     \textcolor{comment}{#}
+00274     \textcolor{comment}{# @param [in] name        The line name (used for identification)}
+00275     \textcolor{comment}{# @param [in] computer    The computer the line is attached to}
+00276     \textcolor{comment}{# @param [in] voltage     The line voltage}
+00277     \textcolor{comment}{# @param [in] description An optional text description of the line}
+00278     \textcolor{comment}{#}
+\hypertarget{settings__classes_8py_source_l00279}{}\hyperlink{classsettings__classes_1_1_p_d_u_device_a9b24e7f6a176430603b1aec4ead55473}{00279}     \textcolor{keyword}{def }\hyperlink{classsettings__classes_1_1_p_d_u_device_a9b24e7f6a176430603b1aec4ead55473}{add_line}(self, name, computer, voltage, description=""):
+00280         \textcolor{keywordflow}{if} self.lines.has\_key(name):
+00281             msg=\textcolor{stringliteral}{"there are at least two lines with the same name, '\{0\}', in
+       device '\{1\}'."}.format(name, self.name)
+00282             \textcolor{keywordflow}{raise} SyntaxError, msg
+00283         self.lines[name]=\hyperlink{classsettings__classes_1_1_p_d_u_line}{PDULine}(name, computer, voltage, description)
+00284         computer.add(self)
+\end{DoxyCode}

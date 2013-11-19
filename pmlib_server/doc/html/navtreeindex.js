@@ -1,0 +1,24 @@
+var NAVTREEINDEX =
+{
+"index.html":[],
+"annotated.html":[0,0],
+"classsettings__classes_1_1_attached_device.html":[0,0,0],
+"classsettings__classes_1_1_computer.html":[0,0,1],
+"classsettings__classes_1_1_d_c2_device.html":[0,0,2],
+"classsettings__classes_1_1_d_c_device.html":[0,0,3],
+"classsettings__classes_1_1_device.html":[0,0,4],
+"classsettings__classes_1_1_line.html":[0,0,5],
+"classsettings__classes_1_1_n_i_device.html":[0,0,6],
+"classsettings__classes_1_1_p_d_u_device.html":[0,0,7],
+"classsettings__classes_1_1_p_d_u_line.html":[0,0,8],
+"classsettings__classes_1_1_watts_up_device.html":[0,0,9],
+"classes.html":[0,1],
+"hierarchy.html":[0,2],
+"functions.html":[0,3,0],
+"functions_func.html":[0,3,1],
+"functions_vars.html":[0,3,2],
+"files.html":[1,0],
+"settings-use-example_8py.html":[1,0,0],
+"settings_8py.html":[1,0,1],
+"settings__classes_8py.html":[1,0,2]
+};

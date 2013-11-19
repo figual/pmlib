@@ -1,0 +1,291 @@
+#!/usr/bin/env python
+
+from threading import Thread
+import sys, socket, signal, select, struct, os, time, select, exceptions #, daemonize
+
+class PMDevice(Thread):
+	def __init__(self, devname, pipename, samplessec, verbose= False):
+		Thread.__init__(self)
+		self.devname= devname
+		self.pipename= pipename
+		self.samplessec= int(samplessec)
+		self.fifo = os.open(self.pipename, os.O_RDONLY)
+		self.watts= []
+		self.wattshour= 0
+		self.running= True
+		self.counters= {}
+		self.timeout= 10
+
+	def run(self):
+		size= struct.calcsize("ff")
+		while self.running:
+			try:
+				ready,_,_ = select.select([self.fifo],[],[], self.timeout)
+		                if not ready: raise Exception
+				else:
+					recv= os.read(self.fifo, size)
+					w, wh= struct.unpack("ff", recv)
+					self.wattshour= wh
+					self.updatepowerdata(w)
+			except:
+				self.running= False
+
+	def updatepowerdata(self, w):
+		if not len(self.counters):
+		 	self.watts= [w]
+		elif [1 for pc_id, c in self.counters.iteritems() if c.status == states["ACTIVE"]]:
+		 	self.watts.append(w)
+
+	def stop(self):
+		self.running= False
+
+class ClientRequest(Thread):
+
+	def __init__(self, client, address, verbose):
+		Thread.__init__(self)
+		self.client = client
+		self.address = address
+		self.verbose= verbose
+		self.running= True
+
+	def create_counter(self, devname):
+		try:
+			#if self.verbose: sys.stdout.write("Creating new power counter of %s\n" % devname)
+			c= Counter(pmdevices[devname]);	idc= abs(id(c))
+			counters[idc]= c
+			pmdevices[devname].counters[idc]= c
+			#if self.verbose: sys.stdout.write("Sending new id counter %s\n" % idc)
+			return struct.pack("q", idc)
+		except:	
+			return struct.pack("q", long(-1))
+
+	def destroy_counter(self, pc_id):
+		if counters[pc_id].status == states["INACTIVE"]:
+			try:	
+				devname= counters[pc_id].pmdev.devname
+				del pmdevices[devname].counters[pc_id]
+				del counters[pc_id]
+				return struct.pack("i", 0)
+			except:	
+				return struct.pack("i", -1)
+		else: return struct.pack("i", -1)
+
+	def receivedata(self, datatype):
+		return struct.unpack(datatype, self.client.recv(struct.calcsize(datatype)))[0]
+	
+	def receive(self):
+		try:
+			msg_type, arg1, arg2 = self.receivedata("i"), None, None
+			if msg_type == operations["CREATE"]:
+				lenght = self.receivedata("i")
+				arg1= self.client.recv(lenght)
+			elif msg_type == operations["SETINTERVAL"]:
+				arg1 = self.receivedata("q")
+				arg2 = self.receivedata("f")
+			elif msg_type == operations["EXIT"]:
+                                pass
+			elif [k for k, v in operations.iteritems() if v == msg_type]:
+				arg1 = self.receivedata("q")
+			else: raise Exception
+			if msg_type not in [operations["CREATE"],operations["EXIT"],operations["ERROR"]] and arg1 not in counters: 
+				return operations["ERROR"], None, None
+			return msg_type, arg1, arg2
+		except:
+			return operations["ERROR"], None, None
+
+	def run(self):
+		
+		while self.running:
+			msg_type, arg1, arg2= self.receive()
+			#print [k for k, r in operations.iteritems() if r == msg_type][0], arg1, arg2
+			if   msg_type == operations["CREATE"]:
+				v= self.create_counter(arg1)
+			elif msg_type == operations["START"]:
+				v= counters[arg1].start()
+			elif msg_type == operations["RESTART"]:
+				v= counters[arg1].restart()
+			elif msg_type == operations["STOP"]:
+				v= counters[arg1].stop()
+			elif msg_type == operations["GET"]:
+				v= counters[arg1].getvalues()
+			elif msg_type == operations["DESTROY"]:
+				v= self.destroy_counter(arg1)
+			elif msg_type == operations["SETINTERVAL"]:
+				v= counters[arg1].setinterval(arg2)
+			elif msg_type == operations["ERROR"]:
+				v= struct.pack("i", -1)
+			elif msg_type == operations["EXIT"]:
+				self.running= False
+				v= struct.pack("i", 0)
+			#self.client.sendall(v)
+			self.sendallpacket(v)
+		self.client.close()
+
+	def sendallpacket(self, msg):
+		totalsent = 0
+		while totalsent < len(msg):
+                	sent = self.client.send(msg[totalsent:])
+			if sent == 0:
+				raise RuntimeError
+			totalsent = totalsent + sent
+
+
+class Counter:
+	
+	def __init__(self, pmdev):
+		self.pmdev= pmdev
+		self.status= states["INACTIVE"]
+		self.sets= []
+		self.samplessec= self.pmdev.samplessec
+		self.watts= []
+		#self.wattshour= 0
+		self.totalwattshour= 0
+				
+	def retval(self, r):
+		return struct.pack("i", int(r))
+
+	def setinterval(self, samplessec):
+		if self.status == states["INACTIVE"]:
+			if samplessec >= self.pmdev.samplessec or samplessec <= 0:
+				self.samplessec= self.pmdev.samplessec
+			else:
+				self.samplessec= samplessec			
+			return self.retval(0)
+		else: return self.retval(-1)
+
+        def start(self):
+                if self.status == states["INACTIVE"]:
+                        self.status= states["ACTIVE"]
+                       #self.wattshour= self.pmdev.wattshour
+                        self.sets= [[len(self.pmdev.watts)-1, -1, self.samplessec, self.pmdev.wattshour]]
+                        self.totalwattshour= 0
+                        return self.retval(0)
+                else: return self.retval(-1)
+
+	def restart(self):
+		if self.status == states["INACTIVE"]:			
+			self.status= states["ACTIVE"]
+			#self.wattshour= self.pmdev.wattshour
+			self.sets.append([len(self.pmdev.watts)-1, -1, self.samplessec, self.pmdev.wattshour])
+			return self.retval(0)
+		else: return self.retval(-1)
+
+	def stop(self):
+		if self.status == states["ACTIVE"]:
+			self.status= states["INACTIVE"]
+			self.sets[-1][1]= len(self.pmdev.watts)
+			#self.totalwattshour+= (self.pmdev.wattshour - self.wattshour)
+			#print "HASTA AHORA CONSUMIDOS: ", self.totalwattshour
+			wattshour=self.pmdev.wattshour
+			self.totalwattshour+= (wattshour - self.sets[-1][3])
+			self.sets[-1][3]= wattshour - self.sets[-1][3]
+			return self.retval(0)
+		else: return self.retval(-1)
+
+	def getvalues(self):		
+		if self.status == states["INACTIVE"]:
+			watts_sets= [0]
+			watts= []
+			wh_sets= []
+			#print self.sets
+			for s,e,i,wh in self.sets:
+				if e >= -1:
+					interval= int(round(self.pmdev.samplessec/i))
+					#print "Interval", interval
+					watts_set= [self.pmdev.watts[w] for w in xrange(s, e, interval)]
+					watts_sets.append(len(watts_set) + watts_sets[-1])
+					watts.extend(watts_set)
+					wh_sets.append(wh)
+					#print watts_sets[-2:], interval
+					#print "NUMERO DE DATOS ENVIADOS", len(watts_set)
+			#print "WH EN SETS", wh_sets
+			msg=  struct.pack("i", len(watts) )
+			msg+= struct.pack("i", len(watts_sets) )
+			msg+= struct.pack("i" * len(watts_sets), *watts_sets )
+			msg+= struct.pack("f" * len(watts), *watts )
+			msg+= struct.pack("f" * len(wh_sets), *wh_sets )
+			msg+= struct.pack("f", self.totalwattshour )
+			#print "MENSAJE CREADO"
+			return msg
+		else: return self.retval(-6)
+
+class PMServer:   
+	
+	def __init__(self, host='192.168.1.1', clientport=6526, pmdevicesfile="./pm-devices.conf", verbose=False):
+		signal.signal(signal.SIGALRM, self.timeouthandler)
+		signal.signal(signal.SIGINT, self.sighandler)
+		self.host= host
+		self.clientport= clientport
+		self.verbose= verbose
+		self.initdevices(pmdevicesfile)
+		self.init_socket(self.host, self.clientport)
+		self.running = True
+
+	def stop(self):
+		for devname,dev in pmdevices.iteritems():
+			dev.stop()
+		self.running= False
+		#self.clientsocket.close()
+	
+	def sighandler(self, signum, frame):
+		self.stop()
+	
+	def timeouthandler(self, signum, frame):
+		sys.stderr.write("No se puede leer de algunos de los dispositivos!\n")
+		sys.exit(-1)
+
+	def initdevices(self, pmdevicesfile):		
+		try:
+			f= open(pmdevicesfile, "r")
+			lines= f.readlines()
+			for l in lines:
+				l= l[:-1]
+				dev= l.split("\t")
+				print dev
+				if not os.path.exists(dev[1]): 
+					sys.stderr.write("Device %s not found\n" % dev[0])
+					raise Exception
+				signal.alarm(1)
+				pmdevices[dev[0]]= PMDevice(*dev)				
+				signal.alarm(0)
+		except:
+			self.stop()
+
+	def init_socket(self, host, port):
+		self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.clientsocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		#if self.verbose: sys.stdout.write("Server listening at ('%s', %s)\n" % (host, port))
+		self.clientsocket.bind((host, port))
+		self.clientsocket.listen(5)	
+
+	def run(self):
+		for devname,dev in pmdevices.iteritems(): dev.start()
+		
+		while self.running:
+		#	try:
+				client, address = self.clientsocket.accept()
+				#if self.verbose: sys.stdout.write("Clientsocket: got connection %d from %s\n" % (client.fileno(), address))
+				client_request = ClientRequest(client, address, self.verbose)
+				client_request.start()
+		#	except socket.error, e:
+		#		continue
+			
+def main(verbose= True):
+	global operations, states
+	global counters, pmdevices
+	
+	operations= {"CREATE": 0, "START": 1, "RESTART": 2, "STOP": 3, "GET": 4, "DESTROY": 5, "SETINTERVAL": 6, "EXIT": 7, "ERROR": -1}
+	states= {"INACTIVE": 0, "ACTIVE": 1}
+	counters= {}
+	pmdevices= {}
+
+	pmdevicesconf= "./pm-devices.conf"	
+	host= "192.168.1.1"
+	clientport = 6526
+
+	PMS = PMServer(host, clientport, pmdevicesconf, verbose)
+	PMS.run()
+
+if __name__ == "__main__":
+	#daemonize.deamonize(stderr="/var/log/pm-daemon.err",pidfile="/var/run/pm-daemon.pid",startmsg="")
+	main()

@@ -1,0 +1,5 @@
+
+Starting devices...
+Starting device ODROID...         [32m[  OK  ]
+[0mStarting server...                [32m[  OK  ]
+[0mServer listening at ('127.0.0.1', 6526)

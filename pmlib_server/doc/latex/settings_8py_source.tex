@@ -1,0 +1,61 @@
+\hypertarget{settings_8py_source}{\section{/home/barrachi/datos/aplicaciones/powermeter/settings.py}
+}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{#!/usr/bin/env python2}
+00002 \textcolor{comment}{# -*- coding: utf-8 -*-}
+00003 
+00004 \textcolor{comment}{#======================================================================}
+00005 \textcolor{comment}{# PowerMeter daemon settings}
+00006 \textcolor{comment}{#======================================================================}
+00007 
+00008 \textcolor{keyword}{from} settings\_classes \textcolor{keyword}{import} computers, devices, Computer
+00009 \textcolor{keyword}{from} settings\_classes \textcolor{keyword}{import} DCDevice, DC2Device, NIDevice, WattsUpDevice, 
+      PDUDevice
+00010 
+00011 \textcolor{comment}{#----------------------------------------------------------------------}
+00012 \textcolor{comment}{# General section}
+00013 \textcolor{comment}{#----------------------------------------------------------------------}
+00014 
+00015 \textcolor{comment}{# Port in which the daemon will be listening (default: 6526)}
+00016 PORT=6526
+00017 
+00018 \textcolor{comment}{# Log file name (default: "/var/log/powermeter.log")}
+00019 LOGFILENAME=\textcolor{stringliteral}{"/var/log/powermeter.log"}
+00020 
+00021 \textcolor{comment}{#----------------------------------------------------------------------}
+00022 \textcolor{comment}{# Computers section}
+00023 \textcolor{comment}{#----------------------------------------------------------------------}
+00024 
+00025 comp1=Computer(name=\textcolor{stringliteral}{"lorca"}, ip=\textcolor{stringliteral}{"150.128.83.25"})
+00026 comp2=Computer(name=\textcolor{stringliteral}{"matserv"}, ip=\textcolor{stringliteral}{"150.128.83.35"})
+00027 
+00028 \textcolor{comment}{#----------------------------------------------------------------------}
+00029 \textcolor{comment}{# Devices section}
+00030 \textcolor{comment}{#----------------------------------------------------------------------}
+00031 
+00032 dev1=DCDevice(name=\textcolor{stringliteral}{"DCMeter"}, computer=comp1, url=\textcolor{stringliteral}{"file://dev/usb0"}, 
+      max\_frequency=25)
+00033 dev1.add\_line(name=\textcolor{stringliteral}{"DC 12V"}, voltage=12, description=\textcolor{stringliteral}{"A 12V power line"})
+00034 dev1.add\_line(name=\textcolor{stringliteral}{"DC 3V"}, voltage=3, description=\textcolor{stringliteral}{"A 3V power line"})
+00035 
+00036 dev2=DC2Device(name=\textcolor{stringliteral}{"DCMeter2"}, computer=comp1, url=\textcolor{stringliteral}{"file://dev/usb1"}, 
+      max\_frequency=1000)
+00037 dev2.add\_line(name=\textcolor{stringliteral}{"DC2 12V"}, voltage=12, description=\textcolor{stringliteral}{"A 12V power line"})
+00038 dev2.add\_line(name=\textcolor{stringliteral}{"DC2 3V"}, voltage=3, description=\textcolor{stringliteral}{"A 3V power line"})
+00039 
+00040 dev2=NIDevice(name=\textcolor{stringliteral}{"National Instruments"}, computer=comp1, url=\textcolor{stringliteral}{"file://dev/usb2
+      "}, max\_frequency=1000)
+00041 dev2.add\_line(name=\textcolor{stringliteral}{"DC2 12V"}, voltage=12, description=\textcolor{stringliteral}{"A 12V power line"})
+00042 dev2.add\_line(name=\textcolor{stringliteral}{"DC2 3V"}, voltage=3, description=\textcolor{stringliteral}{"A 3V power line"})
+00043 
+00044 dev3=WattsUpDevice(name=\textcolor{stringliteral}{"WattsUp"}, computer=comp2, url=\textcolor{stringliteral}{"file://dev/usb3"}, 
+      max\_frequency=50)
+00045 
+00046 dev4=PDUDevice(name=\textcolor{stringliteral}{"PDU"}, url=\textcolor{stringliteral}{"ssh://user:pass@matserv.uji.es"}, max\_frequency=
+      1000)
+00047 dev4.add\_line(name=\textcolor{stringliteral}{"PDU lorca"}, computer=comp1, voltage=220, description=\textcolor{stringliteral}{"lorca
+       watts"})
+00048 dev4.add\_line(name=\textcolor{stringliteral}{"PDU matserv"}, computer=comp2, voltage=220, description=\textcolor{stringliteral}{"
+      matserv watts"})
+\end{DoxyCode}
